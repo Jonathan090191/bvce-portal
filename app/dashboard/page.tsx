@@ -14,18 +14,23 @@ export default async function DashboardPage() {
   let souscriptions: any[] = []
   let bordereaux: any[] = []
   let mandataireId: string | null = null
+  let airtableError: string | null = null
 
-  if (isAdmin) {
-    ;[souscriptions, bordereaux] = await Promise.all([getAllSouscriptions(), getAllBordereaux()])
-  } else {
-    const mandataire = await getMandataireByEmail(user!.email!)
-    if (mandataire) {
-      mandataireId = mandataire.id
-      ;[souscriptions, bordereaux] = await Promise.all([
-        getSouscriptionsByMandataire(mandataire.id),
-        getBordereauxByMandataire(mandataire.id),
-      ])
+  try {
+    if (isAdmin) {
+      ;[souscriptions, bordereaux] = await Promise.all([getAllSouscriptions(), getAllBordereaux()])
+    } else {
+      const mandataire = await getMandataireByEmail(user!.email!)
+      if (mandataire) {
+        mandataireId = mandataire.id
+        ;[souscriptions, bordereaux] = await Promise.all([
+          getSouscriptionsByMandataire(mandataire.id),
+          getBordereauxByMandataire(mandataire.id),
+        ])
+      }
     }
+  } catch (e: any) {
+    airtableError = e?.message ?? 'Erreur de connexion Airtable'
   }
 
   const totalVPan = souscriptions.reduce(
@@ -50,6 +55,11 @@ export default async function DashboardPage() {
 
   return (
     <div>
+      {airtableError && (
+        <div className="mb-6 bg-red-50 border border-red-200 rounded-xl px-5 py-4 text-sm text-red-700">
+          ⚠️ Connexion Airtable impossible : {airtableError}
+        </div>
+      )}
       <h1 className="text-xl font-semibold text-gray-900 mb-1">
         {isAdmin ? 'Vue globale' : 'Mon espace'}
       </h1>
