@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { redirect } from 'next/navigation'
 import { getUser, getUserProfile } from '@/lib/supabase-server'
 import { getAllMandataires } from '@/lib/airtable'
