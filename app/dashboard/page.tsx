@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { getUser, getUserProfile } from '@/lib/supabase-server'
 import { getMandataireByEmail, getSouscriptionsByMandataire, getBordereauxByMandataire, getAllSouscriptions, getAllBordereaux } from '@/lib/airtable'
 
