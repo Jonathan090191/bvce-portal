@@ -9,7 +9,8 @@ function fmt(n: number | null | undefined) {
 
 export default async function DashboardPage() {
   const user = await getUser()
-  const profile = await getUserProfile(user!.id)
+  if (!user) return null
+  const profile = await getUserProfile(user.id)
   const isAdmin = profile?.role === 'admin'
 
   let souscriptions: any[] = []
